@@ -1,0 +1,42 @@
+name: Build WebView APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      web_url:
+        description: "Web URL"
+        required: true
+      app_name:
+        description: "App Name"
+        required: true
+      app_id:
+        description: "Application ID"
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Inject parameters
+        run: |
+          sed -i "s|WEB_URL_PLACEHOLDER|${{ inputs.web_url }}|g" app/build.gradle
+          sed -i "s|APP_NAME_PLACEHOLDER|${{ inputs.app_name }}|g" app/src/main/res/values/strings.xml
+          sed -i "s|applicationId \".*\"|applicationId \"${{ inputs.app_id }}\"|g" app/build.gradle
+
+      - name: Build APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: app/build/outputs/apk/debug/app-debug.apk
