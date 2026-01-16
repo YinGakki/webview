@@ -1,38 +1,28 @@
-package com.example.app;
+package com.template.webview;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-public class MainActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
 
-    private WebView mWebView;
+public class MainActivity extends AppCompatActivity {
 
     @Override
-    @SuppressLint("SetJavaScriptEnabled")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mWebView = findViewById(R.id.activity_main_webview);
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new MyWebViewClient());
 
-        // REMOTE RESOURCE
-        // mWebView.loadUrl("https://example.com");
+        WebView webView = new WebView(this);
+        setContentView(webView);
 
-        // LOCAL RESOURCE
-        // mWebView.loadUrl("file:///android_asset/index.html");
-    }
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
 
-    @Override
-    public void onBackPressed() {
-        if(mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
-            super.onBackPressed();
-        }
+        webView.setWebViewClient(new WebViewClient());
+
+        // ⭐ 核心：从 BuildConfig 读取 URL
+        webView.loadUrl(BuildConfig.WEB_URL);
     }
 }
