@@ -1,23 +1,27 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
-    compileSdkVersion 31
+    namespace "com.template.webview"
+    compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.app"
-        minSdkVersion 21
-        targetSdkVersion 31
+        applicationId "com.template.webview"
+        minSdk 21
+        targetSdk 34
         versionCode 1
         versionName "1.0"
+
+        // ⭐ 核心：可注入的 URL
+        buildConfigField "String", "WEB_URL", "\"WEB_URL_PLACEHOLDER\""
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+
+    buildFeatures {
+        buildConfig true
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.appcompat:appcompat:1.6.1"
 }
